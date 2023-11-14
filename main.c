@@ -117,6 +117,7 @@ void NEO_boardInit(void)
 // Port configuration
 void NEO_portInit(void)
 {
+  // PORT 1
   P1IN    = 0u;
   #if DIRECT_LOGIC == 1
   P1OUT   = BUTTON_PIN;
@@ -131,6 +132,7 @@ void NEO_portInit(void)
   P1SEL2  = 0u;
   P1REN   = BUTTON_PIN;
 
+  // PORT 2
   P2IN    = 0u;
   P2OUT   = 0u;
   P2DIR   = 0u;
@@ -183,6 +185,7 @@ __inline void NEO_applRun(void)
   }
 }
 
+// Function to send one byte to NeoPixel. Will be called as many times as there are LEDs.
 void NEO_sendByte(uint8 b)
 {
   uint16 i;
@@ -220,6 +223,7 @@ void NEO_sendByte(uint8 b)
   }
 }
 
+// Function to send each color to each Neopixel
 void NEO_sendLEDs()
 {
   uint16 i;
@@ -232,6 +236,7 @@ void NEO_sendLEDs()
   delay(800);
 }
 
+// Function to set the colors in each Neopixel
 void NEO_setLEDColor(uint16 led, uint8 red, uint8 green, uint8 blue)
 {
   if(led < NUM_LEDS)
@@ -243,6 +248,7 @@ void NEO_setLEDColor(uint16 led, uint8 red, uint8 green, uint8 blue)
   }
 }
 
+// Function to turn off all NeoPixel
 void NEO_clearStrip(void)
 {
   uint16 i;
@@ -253,6 +259,7 @@ void NEO_clearStrip(void)
 }
 
 //***** ANIMATIONS *******
+// Animation 1
 void breatheAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i,j;
@@ -279,6 +286,7 @@ void breatheAnimation(uint8 red, uint8 green, uint8 blue)
   NEO_clearStrip();
 }
 
+// Animation 2
 void raceAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i;
@@ -292,6 +300,7 @@ void raceAnimation(uint8 red, uint8 green, uint8 blue)
   NEO_clearStrip();
 }
 
+// Animation 3
 void rainbowAnimation()
 {
   uint16 i,j;
@@ -318,6 +327,7 @@ void rainbowAnimation()
   }
 }
 
+// Animation 4
 void blinkAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i;
@@ -331,6 +341,7 @@ void blinkAnimation(uint8 red, uint8 green, uint8 blue)
   delay(1600000);
 }
 
+// Animation 5
 void waveAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i,j;
@@ -348,6 +359,7 @@ void waveAnimation(uint8 red, uint8 green, uint8 blue)
   }
 }
 
+// Animation 6
 void centerToOutAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i;
@@ -362,6 +374,7 @@ void centerToOutAnimation(uint8 red, uint8 green, uint8 blue)
   NEO_clearStrip();
 }
 
+// Animation 6
 void pingPongAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i;
@@ -381,6 +394,7 @@ void pingPongAnimation(uint8 red, uint8 green, uint8 blue)
   }
 }
 
+// Animation 7
 void fadeInOutAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i, j;
@@ -405,6 +419,7 @@ void fadeInOutAnimation(uint8 red, uint8 green, uint8 blue)
   NEO_clearStrip();
 }
 
+// Animation 8
 void buildUpAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i;
