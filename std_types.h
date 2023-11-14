@@ -2,7 +2,6 @@
 #define _STD_TYPES_H_
 
 // Standard typedef
-
 typedef unsigned char       boolean;  // 8 bits
 // Unsigned types
 typedef signed char         sint8;	  // 8 bit
