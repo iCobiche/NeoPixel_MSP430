@@ -46,7 +46,7 @@
 #define DIRECT_LOGIC    (1u)              // 1: Direct logic; 0: Inverted logic
 
 //***** MACROS *******
-
+#define delay(x)        if(change == 1) { return; } __delay_cycles(x);
 
 //***** FUNCTIONS *******
 void NEO_boardInit(void);
@@ -69,8 +69,9 @@ void buildUpAnimation(uint8 red, uint8 green, uint8 blue);
 
 
 //***** GLOBAL VARIABLES *******
-uint16 state  = 0u;
-uint8  leds[NUM_LEDS * 3u];
+uint8 state  = 0u;
+uint8 change = 0u;
+uint8 leds[NUM_LEDS * 3u];
 
 
 //***** MAIN FUNCTION *******
@@ -82,6 +83,9 @@ void main(void)
   // Port configuration
   NEO_portInit();
 
+  // Enable interrupt
+  __enable_interrupt();
+
 NEXT_COLOR:
   state++;
   // Configurar los colores de los LEDs
@@ -91,6 +95,11 @@ NEXT_COLOR:
   while(1)
   {
     NEO_applRun();
+    if(change == 1u)
+    {
+      change = 0u;
+      goto NEXT_COLOR;
+    }
   }
 }
 
@@ -134,7 +143,7 @@ void NEO_portInit(void)
 }
 
 // Main runnable
-void NEO_applRun(void)
+__inline void NEO_applRun(void)
 {
   switch(state)
   {
@@ -220,7 +229,7 @@ void NEO_sendLEDs()
   }
 
   // Mandatory delay
-  __delay_cycles(800);
+  delay(800);
 }
 
 void NEO_setLEDColor(uint16 led, uint8 red, uint8 green, uint8 blue)
@@ -255,7 +264,7 @@ void breatheAnimation(uint8 red, uint8 green, uint8 blue)
       NEO_setLEDColor(j, (red * i) / 255, (green * i) / 255, (blue * i) / 255);
     }
     NEO_sendLEDs();
-    __delay_cycles(160000);
+    delay(160000);
   }
 
   for (i = 255; i > 0u; i--)
@@ -265,7 +274,7 @@ void breatheAnimation(uint8 red, uint8 green, uint8 blue)
       NEO_setLEDColor(j, (red * i) / 255, (green * i) / 255, (blue * i) / 255);
     }
     NEO_sendLEDs();
-    __delay_cycles(160000);
+    delay(160000);
   }
   NEO_clearStrip();
 }
@@ -278,7 +287,7 @@ void raceAnimation(uint8 red, uint8 green, uint8 blue)
     NEO_setLEDColor(i, red, green, blue);
     if (i > 0) NEO_setLEDColor(i - 1, 0, 0, 0);
     NEO_sendLEDs();
-    __delay_cycles(800000);
+    delay(800000);
   }
   NEO_clearStrip();
 }
@@ -305,7 +314,7 @@ void rainbowAnimation()
       NEO_setLEDColor(j, colors[colorIndex][0], colors[colorIndex][1], colors[colorIndex][2]);
     }
     NEO_sendLEDs();
-    __delay_cycles(1200000);
+    delay(1200000);
   }
 }
 
@@ -317,9 +326,9 @@ void blinkAnimation(uint8 red, uint8 green, uint8 blue)
     NEO_setLEDColor(i, red, green, blue);
   }
   NEO_sendLEDs();
-  __delay_cycles(1600000);
+  delay(1600000);
   NEO_clearStrip();
-  __delay_cycles(1600000);
+  delay(1600000);
 }
 
 void waveAnimation(uint8 red, uint8 green, uint8 blue)
@@ -335,7 +344,7 @@ void waveAnimation(uint8 red, uint8 green, uint8 blue)
       NEO_setLEDColor(j, (red * delta) / 255, (green * delta) / 255, (blue * delta) / 255);
     }
     NEO_sendLEDs();
-    __delay_cycles(960000);
+    delay(960000);
   }
 }
 
@@ -348,7 +357,7 @@ void centerToOutAnimation(uint8 red, uint8 green, uint8 blue)
     NEO_setLEDColor(center - i, red, green, blue);
     NEO_setLEDColor(center + i, red, green, blue);
     NEO_sendLEDs();
-    __delay_cycles(800000);
+    delay(800000);
   }
   NEO_clearStrip();
 }
@@ -361,14 +370,14 @@ void pingPongAnimation(uint8 red, uint8 green, uint8 blue)
     NEO_clearStrip();
     NEO_setLEDColor(i, red, green, blue);
     NEO_sendLEDs();
-    __delay_cycles(800000);
+    delay(800000);
   }
   for (i = NUM_LEDS - 2; i > 0; i--)
   {
     NEO_clearStrip();
     NEO_setLEDColor(i, red, green, blue);
     NEO_sendLEDs();
-    __delay_cycles(800000);
+    delay(800000);
   }
 }
 
@@ -382,7 +391,7 @@ void fadeInOutAnimation(uint8 red, uint8 green, uint8 blue)
       NEO_setLEDColor(j, (red * i) / 255, (green * i) / 255, (blue * i) / 255);
     }
     NEO_sendLEDs();
-    __delay_cycles(80000);
+    delay(80000);
   }
   for (i = 255; i > 0; i--)
   {
@@ -391,7 +400,7 @@ void fadeInOutAnimation(uint8 red, uint8 green, uint8 blue)
       NEO_setLEDColor(j, (red * i) / 255, (green * i) / 255, (blue * i) / 255);
     }
     NEO_sendLEDs();
-    __delay_cycles(80000);
+    delay(80000);
   }
   NEO_clearStrip();
 }
@@ -403,7 +412,7 @@ void buildUpAnimation(uint8 red, uint8 green, uint8 blue)
   {
     NEO_setLEDColor(i, red, green, blue);
     NEO_sendLEDs();
-    __delay_cycles(1200000);
+    delay(1200000);
   }
   NEO_clearStrip();
 }
@@ -421,6 +430,7 @@ void __attribute__ ((interrupt(PORT1_VECTOR))) Port_1 (void)
 {
   if(P1IFG & BUTTON_PIN)
   {
-    goto NEXT_COLOR;
+    change = 1u;
+    P1IFG &= ~BUTTON_PIN;
   }
 }
