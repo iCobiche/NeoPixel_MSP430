@@ -1,6 +1,11 @@
 #include <msp430.h> 
 #include <std_types.h>
 
+/////////////////////  MEMORY USED  ///////////////////
+//
+// Flash/FRAM usage is 2448 bytes of 4KB = 59.76% used
+//        RAM usage is 112 bytes of 256B = 43.75% used
+//
 /////////////////////  DEVICE PINOUTS  ///////////////////
 //
 //                       MSP4302332
@@ -374,7 +379,7 @@ void centerToOutAnimation(uint8 red, uint8 green, uint8 blue)
   NEO_clearStrip();
 }
 
-// Animation 6
+// Animation 7
 void pingPongAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i;
@@ -394,7 +399,7 @@ void pingPongAnimation(uint8 red, uint8 green, uint8 blue)
   }
 }
 
-// Animation 7
+// Animation 8
 void fadeInOutAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i, j;
@@ -419,7 +424,7 @@ void fadeInOutAnimation(uint8 red, uint8 green, uint8 blue)
   NEO_clearStrip();
 }
 
-// Animation 8
+// Animation 9
 void buildUpAnimation(uint8 red, uint8 green, uint8 blue)
 {
   uint16 i;
